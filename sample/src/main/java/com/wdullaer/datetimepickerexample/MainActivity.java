@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements
     private CheckBox enableSeconds;
 
     private int year, month, day, hour, minute;
+    boolean isBlockedDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,25 +131,30 @@ public class MainActivity extends AppCompatActivity implements
                 List<Integer> listBlockMonth = new LinkedList<>();
                 List<Integer> listBlockDayOfMonth = new LinkedList<>();
 
-                for(int x =0; x<10; x++){
+                for(int x = 0; x < 10; x++){
                     listBlockYear.add(2016);
                     listBlockMonth.add(1);
-                    listBlockDayOfMonth.add(x+19);
+                    listBlockDayOfMonth.add(x + 12);
                 }
 
-
-                while( cAux.getTimeInMillis() <= cMax.getTimeInMillis() ){
+                while(cAux.getTimeInMillis() <= cMax.getTimeInMillis()){
                   //  if( cAux.get( Calendar.DAY_OF_WEEK ) != 2 && cAux.get( Calendar.DAY_OF_WEEK ) != 4 && cAux.get(Calendar.DAY_OF_WEEK) !=6 && cAux.get(Calendar.DAY_OF_MONTH) != 20 ){
-
-                    for(int x =0; x<10; x++) {
+                    isBlockedDate = false;
+                    for(int x = 0; x < 10; x++) {
                         if (cAux.get(Calendar.DAY_OF_MONTH) != listBlockDayOfMonth.get(x) || cAux.get(Calendar.MONTH) != listBlockMonth.get(x) || cAux.get(Calendar.YEAR) != listBlockYear.get(x)) {
-                            Calendar c = Calendar.getInstance();
-                            c.setTimeInMillis(cAux.getTimeInMillis());
-
-                            daysList.add(c);
+                            isBlockedDate = false;
+                        } else {
+                            isBlockedDate = true;
+                            x = 10000;
                         }
-                        cAux.setTimeInMillis(cAux.getTimeInMillis() + (24 * 60 * 60 * 1000));
                     }
+
+                    if(!isBlockedDate) {
+                        Calendar c = Calendar.getInstance();
+                        c.setTimeInMillis(cAux.getTimeInMillis());
+                        daysList.add(c);
+                    }
+                    cAux.setTimeInMillis(cAux.getTimeInMillis() + (24 * 60 * 60 * 1000));
                 }
                 daysArray = new Calendar[ daysList.size() ];
                 for( int i = 0; i < daysArray.length; i++ ){
